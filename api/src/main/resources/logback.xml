@@ -1,0 +1,47 @@
+<configuration>
+
+    <springProperty scope="context" name="logLevel" source="logging-level"/>
+
+    <springProperty scope="context" name="jarHome" source="jar-home"/>
+
+    <property name="defaultPattern"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5level | %-20.20thread | %-50.50logger | %msg%n"/>
+
+    <property name="defaultLogPath" value="${jarHome}/logs"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${defaultPattern}</pattern>
+        </layout>
+    </appender>
+
+    <springProfile name="test,prod">
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${defaultLogPath}/app.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${defaultLogPath}/%d{yyyy-MM-dd-HH}.app.log</fileNamePattern>
+                <!--  7 Days * 24 Hours  -->
+                <maxHistory>168</maxHistory>
+                <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${defaultPattern}</pattern>
+            </encoder>
+        </appender>
+    </springProfile>
+
+    <logger name="jebsen" level="${logLevel}" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <springProfile name="test,prod">
+            <appender-ref ref="FILE"/>
+        </springProfile>
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+        <springProfile name="test,prod">
+            <appender-ref ref="FILE"/>
+        </springProfile>
+    </root>
+
+</configuration>

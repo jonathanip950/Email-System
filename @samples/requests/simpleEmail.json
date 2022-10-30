@@ -1,0 +1,7 @@
+{
+  "sentFrom": "test@test.com",
+  "title": "Testing Title",
+  "recipients": ["ckwong@jebsen.com"],
+  "contentRows": ["row1: content", "row2: content"],
+  "lineBreakSize": 2
+}
